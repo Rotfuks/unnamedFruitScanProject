@@ -1,4 +1,4 @@
-from services.kerasModelService import loadKerasModel, checkImageFile
+from src.services.kerasModelService import loadKerasModel, checkImageFile
 
 model = loadKerasModel('fruitModel')
 

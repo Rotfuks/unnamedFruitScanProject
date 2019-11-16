@@ -1,2 +1,2 @@
 source virtPyEnv/bin/activate
-python main.py
+python export ENV=local && src/main.py
