@@ -12,6 +12,8 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   IMAGE: ufsp-view
+  GKE_CLUSTER: ${{ secrets.GKE_VIEW_CLUSTER }}
+  GKE_ZONE:  ${{ secrets.GKE_ZONE }}
 
 jobs:
   setup-build-publish-deploy:
@@ -56,3 +58,18 @@ jobs:
     - name: Publish
       run: |
         gcloud docker -- push "eu.gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA"
+
+    # Set up kustomize
+    - name: Set up Kustomize
+      run: |
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+
+    # Deploy the Docker image to the GKE cluster
+    - name: Deploy
+      run: |
+        gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image "eu.gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA"
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/gke-test
+        kubectl get services -o wide
