@@ -10,6 +10,7 @@ env:
   GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
   GKE_KEY: ${{ secrets.GKE_KEY }}
   GITHUB_SHA: ${{ github.sha }}
+  GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   IMAGE: ufsp-view
 
 jobs:
@@ -42,6 +43,10 @@ jobs:
           --build-arg GITHUB_REF="$GITHUB_REF" \
           https://github.com/Rotfuks/unnamedFruitScanProject.git#master:view
           
+    - name: Docker Login
+      run: |
+        docker login -u _json_key -p "$GCLOUD_AUTH" https://gcr.io
+    
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |
