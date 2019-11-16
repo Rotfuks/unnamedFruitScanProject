@@ -10,6 +10,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # install project dependencies leaving out dev dependencies
+RUN npm install -g vue
 RUN npm install -g @vue/cli
 RUN npm install --production
 
