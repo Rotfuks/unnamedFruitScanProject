@@ -21,21 +21,26 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
       
-    - name: Setup Google Cloud
-      uses: actions/gcloud/auth@master
-      env:
-        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_email: ${{ secrets.GKE_EMAIL }}
+        service_account_key: ${{ secrets.GKE_KEY }}    
         
-    # Login to gcloud
     - run: |
-        # gcloud auth login
+        # Get GCR Docker Creds Compoonent
+        gcloud components install docker-credential-gcr
 
     # Configure docker to use the gcloud command-line tool as a credential helper
     - run: |
         # Set up docker to authenticate
         # via gcloud command-line tool.
         gcloud auth configure-docker
-
+        
+    - run: |
+        # Configure GCR Docker Creds Compoonent
+        docker-credential-gcr configure-docker
+        
     # Build the Docker image
     - name: Build
       run: |
@@ -48,4 +53,4 @@ jobs:
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |
-        docker push gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
+        gcloud docker push "gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA"
