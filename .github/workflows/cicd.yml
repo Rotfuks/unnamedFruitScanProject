@@ -27,19 +27,11 @@ jobs:
       env:
         GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }} 
         
-    - run: |
-        # Get GCR Docker Creds Compoonent
-        gcloud components install docker-credential-gcr
-
     # Configure docker to use the gcloud command-line tool as a credential helper
     - run: |
         # Set up docker to authenticate
         # via gcloud command-line tool.
         gcloud auth configure-docker
-        
-    - run: |
-        # Configure GCR Docker Creds Compoonent
-        docker-credential-gcr configure-docker
         
     # Build the Docker image
     - name: Build
