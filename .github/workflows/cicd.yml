@@ -70,4 +70,5 @@ jobs:
       run: |
         gcloud container clusters get-credentials "$GKE_CLUSTER" --zone="$GKE_ZONE" --project="$GKE_PROJECT"
         kubectl run "$IMAGE" --image="eu.gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA" --port 8080
+        kubectl expose deployment "$IMAGE" --type=LoadBalancer --port 80 --target-port 8080
         
