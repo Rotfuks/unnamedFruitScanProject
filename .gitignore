@@ -60,8 +60,10 @@ typings/
 # next.js build output
 .next
 
-
 flaskr/virtPyEnv/**
 .DS_Store
 *.h5
 flaskr/dataset/**
+#ide
+.idea
+.DS_Store
