@@ -6,6 +6,7 @@ from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
 from keras.preprocessing import image
+from keras_preprocessing.image import load_img
 
 labelMapping = {0 : "Pflaume",
                 1 : "Banane",
@@ -60,13 +61,12 @@ def saveKerasModel(model, modelName):
 def loadKerasModel(modelName):
     return load_model(modelName + '.h5')
 
-def checkImagePath(model, imagePath):
-    test_image = image.load_img(imagePath, target_size = (128, 128))
-    return checkImageFile(model, test_image)
-
 def checkImageFile(model, imageFile):
-    test_image = imageFile
-    test_image = image.img_to_array(test_image)
-    test_image = np.expand_dims(test_image, axis = 0)
+    testImage = load_img(imageFile, target_size = (128, 128))
+    return checkImage(model, testImage)
+
+def checkImage(model, imageFile):
+    test_image = image.img_to_array(imageFile)
+    test_image = np.expand_dims(test_image, axis=0)
     modelClassNumber = model.predict_classes(test_image)[0]
     return labelMapping[modelClassNumber]
