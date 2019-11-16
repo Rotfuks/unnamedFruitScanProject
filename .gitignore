@@ -60,7 +60,7 @@ typings/
 # next.js build output
 .next
 
-*.py[cod]
+*.pyc
 data/**
 flaskr/virtPyEnv/**
 .DS_Store
