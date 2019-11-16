@@ -1,5 +1,7 @@
 from flask import Flask, request
+import os
 from services.kerasModelService import loadKerasModel, checkImageFile
+from configurations.environmentConfigurations import LocalEnvironment, ProdEnvironment
 
 app = Flask(__name__)
 model = loadKerasModel('fruitModel')
@@ -13,5 +15,10 @@ def getResult():
     print(result)
     return result
 
+if os.environ['ENV'] == 'prod':
+    config = ProdEnvironment()
+else:
+    config = LocalEnvironment()
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host=config.HOST)
