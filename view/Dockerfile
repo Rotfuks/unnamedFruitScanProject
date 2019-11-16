@@ -10,16 +10,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # install project dependencies leaving out dev dependencies
-#RUN npm install npm
-#RUN npm install -g vue
-#RUN npm install -g @vue/cli
-#RUN npm install --production
+RUN npm install npm
+RUN npm install -g vue
+RUN npm install -g @vue/cli
+RUN npm install --production
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
 # build app for production with minification
-#RUN npm run build
+RUN npm run build
 
 EXPOSE 8080
 CMD [ "http-server", "dist" ]
