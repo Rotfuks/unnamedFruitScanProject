@@ -35,10 +35,12 @@ jobs:
     # Build the Docker image
     - name: Build
       run: |
-        docker build https://github.com/Rotfuks/unnamedFruitScanProject.git#master:view \
+        docker build \
           --tag "gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" .
+          --build-arg GITHUB_REF="$GITHUB_REF" \
+          https://github.com/Rotfuks/unnamedFruitScanProject.git#master:view .
+          
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |
