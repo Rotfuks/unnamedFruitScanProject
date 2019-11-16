@@ -1,10 +1,16 @@
 # Importing the Keras libraries and packages
+import numpy as np
 from keras.models import Sequential, load_model
 from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
 from keras.preprocessing import image
+
+labelMapping = {0 : "Pflaume",
+                1 : "Banane",
+                2 : "Apfel",
+                3 : "Annanas"}
 
 def createKerasModel(pathTrainingset, pathTestset):
     # Initialising the CNN
@@ -21,7 +27,7 @@ def createKerasModel(pathTrainingset, pathTestset):
     classifier.add(Flatten())
     # Step 4 - Full connection
     classifier.add(Dense(units = 128, activation = 'relu'))
-    classifier.add(Dense(units = 12, activation = 'softmax'))
+    classifier.add(Dense(units = 4, activation = 'softmax'))
     # Compiling the CNN
     classifier.compile(optimizer = 'adam', loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
     # Part 2 - Fitting the CNN to the images
@@ -40,10 +46,10 @@ def createKerasModel(pathTrainingset, pathTestset):
     batch_size = 64,
     class_mode = 'binary')
     classifier.fit_generator(training_set,
-    steps_per_epoch = 20,
-    epochs = 1,
+    steps_per_epoch = 15,
+    epochs = 5,
     validation_data = test_set,
-    validation_steps = 10)
+    validation_steps = 7)
     # Part 3 - Making new predictions
     return classifier
 
@@ -54,6 +60,13 @@ def saveKerasModel(model, modelName):
 def loadKerasModel(modelName):
     return load_model(modelName + '.h5')
 
-def checkImageInModel(model, imagePath):
-    predictImage = image.load_img(imagePath, target_size = (64, 64))
-    return model.predict(predictImage)
+def checkImagePath(model, imagePath):
+    test_image = image.load_img(imagePath, target_size = (128, 128))
+    return checkImageFile(model, test_image)
+
+def checkImageFile(model, imageFile):
+    test_image = imageFile
+    test_image = image.img_to_array(test_image)
+    test_image = np.expand_dims(test_image, axis = 0)
+    modelClassNumber = model.predict_classes(test_image)[0]
+    return labelMapping[modelClassNumber]

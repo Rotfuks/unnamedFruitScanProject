@@ -1,24 +1,28 @@
+import os
+
 from flask import Flask, request
-from services.kerasModelService import createKerasModel, saveKerasModel, loadKerasModel, checkImageInModel
+from keras_preprocessing.image import load_img
+
+from services.kerasModelService import loadKerasModel, checkImageFile
 import json
 
 from services.FileService import FileService
 app = Flask(__name__)
 fileService = FileService('temp')
+model = loadKerasModel('fruitModel')
 
 @app.route('/', methods=['GET'])
 def getFiles():
     return json.dumps(fileService.getFiles())
 
 @app.route('/', methods=['POST'])
-def saveFile():
+def getResult():
+    if 'file' not in request.files:
+        print('No file part')
     f = request.files['file']
-    return f
-
-print("test")
-model = loadKerasModel('regalArticleModel')
-result = checkImageInModel(model, '/Users/jan/Documents/repos/unnamedFruitScanProject/flaskr/dataset/Codecamp_Regal/Testset/1_Haribo_Goldbaer/IMG_1119.jpg')
-print(result)
+    result = checkImageFile(model, load_img(f, target_size = (64, 64)))
+    print(result)
+    return result
 
 if __name__ == "__main__":
     app.run()
