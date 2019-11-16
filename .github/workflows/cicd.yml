@@ -25,6 +25,10 @@ jobs:
       uses: actions/gcloud/auth@master
       env:
         GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        
+    # Login to gcloud
+    - run: |
+        # gcloud auth login
 
     # Configure docker to use the gcloud command-line tool as a credential helper
     - run: |
