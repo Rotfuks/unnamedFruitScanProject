@@ -45,7 +45,7 @@ jobs:
           
     - name: Docker Login
       run: |
-        echo "$GKE_KEY" | docker login -u _json_key --password-stdin https://gcr.io
+        echo "$GKE_KEY" | docker login -u ${{ secrets.GKE_EMAIL }} _json_key --password-stdin https://gcr.io
         
     # Push the Docker image to Google Container Registry
     - name: Publish
