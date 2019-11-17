@@ -4,7 +4,7 @@
         <div class="first-row">
           <HelloWorld :msg="result"/>
           <p>
-            This fruit is the tasty banana!
+            This fruit is the tasty {{ recognized }}!
           </p>
           <h3>More information about {{ recognized }}</h3>
         </div>
