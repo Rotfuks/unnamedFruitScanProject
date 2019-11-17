@@ -1,17 +1,42 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to the UnnamedFruitScanProject"/>
+    <HelloWorld msg="Welcome to Untitled Fruit Shop!"/>
+
+    <p>
+      Please upload a Fruit Picture to scan it.
+    </p>
+    <p>
+      <b-form-file
+        v-model="image"
+        :state="Boolean(image)"
+        placeholder="Choose a file or drop it here..."
+        drop-placeholder="Drop file here..."
+      ></b-form-file>
+    </p>
+    <p>
+      <b-button variant="success" @click="scanFruit">
+        What's this Fruit?
+      </b-button>
+    </p>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
 
-export default {
-  name: 'home',
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import router from '@/router/index.ts'
+import HelloWorld from '@/components/HelloWorld.vue'
+
+@Component ({
   components: {
-    HelloWorld,
-  },
-};
+    HelloWorld
+  }
+})
+export default class extends Vue {
+  private image?: File;
+
+  public scanFruit() {
+    router.push('Result')
+  }
+}
 </script>
