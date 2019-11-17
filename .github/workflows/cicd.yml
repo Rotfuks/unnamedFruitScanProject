@@ -1,4 +1,4 @@
-name: Build and Publish
+name: View - Build and Publish
 on:
   push:
     branches:
@@ -10,10 +10,12 @@ env:
   GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
   GKE_KEY: ${{ secrets.GKE_KEY }}
   GITHUB_SHA: ${{ github.sha }}
-  GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-  IMAGE: ufsp-view
-  GKE_CLUSTER: ${{ secrets.GKE_VIEW_CLUSTER }}
-  GKE_ZONE:  ${{ secrets.GKE_ZONE }}
+  GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}  
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  VIEW_IMAGE: ufsp-view
+  SERVER_IMAGE: ufsp-server
+  GKE_VIEW_CLUSTER: ${{ secrets.GKE_VIEW_CLUSTER }}
+  GKE_SERVER_CLUSTER: ${{ secrets.GKE_SERVER_CLUSTER }}
 
 jobs:
   setup-build-publish-deploy:
@@ -37,13 +39,21 @@ jobs:
         gcloud auth configure-docker
         
     # Build the Docker image
-    - name: Build
+    - name: Build View
       run: |
         docker build \
-          -t "eu.gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA" \
+          -t "eu.gcr.io/$GKE_PROJECT/$VIEW_IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
           https://github.com/Rotfuks/unnamedFruitScanProject.git#master:view
+    
+    - name: Build Server
+      run: |
+        docker build \
+          -t "eu.gcr.io/$GKE_PROJECT/$SERVER_IMAGE:$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" \
+          https://github.com/Rotfuks/unnamedFruitScanProject.git#master:server
     
     # Docker login
     - name: Docker Login
@@ -57,12 +67,26 @@ jobs:
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |
-        gcloud docker -- push "eu.gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA"
+        gcloud docker -- push "eu.gcr.io/$GKE_PROJECT/$VIEW_IMAGE:$GITHUB_SHA"
+        gcloud docker -- push "eu.gcr.io/$GKE_PROJECT/$SERVER_IMAGE:$GITHUB_SHA"
 
     # Deploy the Docker image to the GKE cluster
-    - name: Deploy
+    - name: Deploy View
       run: |
-        gcloud container clusters get-credentials "$GKE_CLUSTER" --zone="$GKE_ZONE" --project="$GKE_PROJECT"
-        kubectl set image deployment/"$IMAGE" "$IMAGE"="eu.gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA"
+        gcloud container clusters get-credentials "$GKE_VIEW_CLUSTER" --zone="$GKE_ZONE" --project="$GKE_PROJECT"
+        kubectl set image deployment/"$VIEW_IMAGE" "$VIEW_IMAGE"="eu.gcr.io/$GKE_PROJECT/$VIEW_IMAGE:$GITHUB_SHA"
+        
+    # Deploy the Docker image to the GKE cluster
+    # kubectl set image deployment/"$SERVER_IMAGE" "$SERVER_IMAGE"="eu.gcr.io/$GKE_PROJECT/$SERVER_IMAGE:$GITHUB_SHA"
+    - name: Deploy Server
+      run: |
+        gcloud container clusters get-credentials "$GKE_SERVER_CLUSTER" --zone="$GKE_ZONE" --project="$GKE_PROJECT"
+        kubectl run "$SERVER_IMAGE" --image="eu.gcr.io/$GKE_PROJECT/$SERVER_IMAGE:$GITHUB_SHA" --port 5000
+        kubectl expose deployment/"$SERVER_IMAGE" --type=LoadBalancer --port 8081 --target-port 5000
+        
+        
+    # Deploy the Docker image to the GKE cluster
+    - name: Validate Services
+      run: | 
         kubectl get service
         
