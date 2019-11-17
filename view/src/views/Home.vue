@@ -33,7 +33,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
   }
 })
 export default class extends Vue {
-  private image: blob = null;
+  private image?: File;
 
   public scanFruit() {
     router.push('Result')
