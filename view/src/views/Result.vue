@@ -31,17 +31,18 @@ export default class extends Vue {
     if (this.recognized == null) {
       return "It's nothing :(";
     }
-    if(['a','e','i','o','u'].includes(this.recognized.charAt(0))) {
+    if(['a','e','i','o','u','A','E','I','O','U'].includes(this.recognized.charAt(0))) {
       return "It's an " +  this.recognized + "!";
     }
     return "It's a " +  this.recognized + "!";
   }
 
   public get moreInfo() {
-    return "https://en.wikipedia.org/wiki/" + this.recognized;
+    return "https://de.wikipedia.org/wiki/" + this.recognized;
   }
 
   public created() {
+    // @ts-ignore typing
     this.recognized = this.$route.query.result;
     if(this.recognized==null) {
       this.recognized = "banana"
