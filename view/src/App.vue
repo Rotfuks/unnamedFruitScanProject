@@ -1,8 +1,26 @@
 <template>
   <div id="app">
-    <router-view/>
+    <div class="global-navbar">
+      <navbar/>
+    </div>
+    <div class="global-content">
+      <router-view/>
+    </div>
   </div>
 </template>
+
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import Navbar from '@/components/Navbar.vue'
+
+@Component ({
+  components: {
+    Navbar
+  }
+})
+export default class extends Vue {
+}
+</script>
 
 <style>
 #app {
@@ -13,16 +31,12 @@
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+.global-navbar {
+  padding-bottom: 30px;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.global-content {
+  max-width: 600px;
+  margin: auto;
 }
 </style>
