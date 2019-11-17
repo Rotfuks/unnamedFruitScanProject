@@ -38,8 +38,7 @@ export default class extends Vue {
 
 .global-content {
   flex: 1 1 auto;
-  max-width: 600px;
-  margin: auto;
+  margin: 15px;
   height: 100vh;
 }
 

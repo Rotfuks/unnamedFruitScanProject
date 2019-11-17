@@ -14,9 +14,14 @@
       ></b-form-file>
     </p>
     <p>
-      <b-button variant="success" @click="scanFruit">
-        What's this Fruit?
-      </b-button>
+      <div ref="spinner" id="mySpinner" class="justify-content-center mb-3">
+        <b-spinner label="Loading..."></b-spinner>
+      </div>
+      <div ref="button" class="my-button">
+        <b-button variant="success" @click="scanFruit">
+          What's this Fruit?
+        </b-button>
+      </div>
     </p>
   </div>
 </template>
@@ -43,6 +48,8 @@ export default class extends Vue {
     let bodyFormData:FormData = new FormData();
     // @ts-ignore typecheck to make it faster
     bodyFormData.append('file', this.imageFile);
+    this.$refs.button.style.display = "none";
+    this.$refs.spinner.style.display = "flex";
     axios({
       method: "POST",
       url: "http://35.228.108.145:8080/",
@@ -60,5 +67,8 @@ export default class extends Vue {
 <style>
 .my-form {
   padding: 0 20px;
+}
+#mySpinner {
+  display: none;
 }
 </style>
