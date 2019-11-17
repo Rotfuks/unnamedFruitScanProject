@@ -48,7 +48,9 @@ export default class extends Vue {
     let bodyFormData:FormData = new FormData();
     // @ts-ignore typecheck to make it faster
     bodyFormData.append('file', this.imageFile);
+    // @ts-ignore typing
     this.$refs.button.style.display = "none";
+    // @ts-ignore typing
     this.$refs.spinner.style.display = "flex";
     axios({
       method: "POST",
