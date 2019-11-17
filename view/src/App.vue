@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="box">
     <div class="global-navbar">
       <navbar/>
     </div>
@@ -33,10 +33,21 @@ export default class extends Vue {
 
 .global-navbar {
   padding-bottom: 30px;
+  flex: 0 1 auto;
 }
 
 .global-content {
+  flex: 1 1 auto;
   max-width: 600px;
   margin: auto;
+  height: 100vh;
 }
+
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
 </style>
