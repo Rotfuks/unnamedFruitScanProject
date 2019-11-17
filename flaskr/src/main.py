@@ -2,8 +2,10 @@ from flask import Flask, request
 import os
 from services.kerasModelService import loadKerasModel, checkImageFile
 from configurations.environmentConfigurations import LocalEnvironment, ProdEnvironment
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 model = loadKerasModel('fruitModel')
 
 @app.route('/', methods=['GET'])

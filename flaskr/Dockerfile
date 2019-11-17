@@ -1,6 +1,6 @@
 FROM python:3.6-slim
 
-RUN pip3 install --no-cache-dir flask keras tensorflow pillow && \
+RUN pip3 install --no-cache-dir flask keras tensorflow pillow flask_cors && \
     mkdir src
 
 COPY src src
