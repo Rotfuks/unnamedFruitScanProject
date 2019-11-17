@@ -8,10 +8,10 @@ from keras.layers import Dense
 from keras.preprocessing import image
 from keras_preprocessing.image import load_img
 
-labelMapping = {0 : "Pflaume",
-                1 : "Banane",
-                2 : "Apfel",
-                3 : "Annanas"}
+labelMapping = {0 : "plum",
+                1 : "banana",
+                2 : "apple",
+                3 : "pineapple"}
 
 def createKerasModel(pathTrainingset, pathTestset):
     # Initialising the CNN
