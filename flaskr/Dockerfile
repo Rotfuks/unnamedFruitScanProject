@@ -4,7 +4,7 @@ RUN pip3 install --no-cache-dir flask keras tensorflow && \
     mkdir src
 
 COPY src src
-COPY fruitModel.h5 /
+#COPY fruitModel.h5 /
 
 EXPOSE 5000
 
