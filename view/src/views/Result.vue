@@ -38,7 +38,7 @@ export default class extends Vue {
   }
 
   public get moreInfo() {
-    return "https://de.wikipedia.org/wiki/" + this.recognized;
+    return "https://en.wikipedia.org/wiki/" + this.recognized;
   }
 
   public created() {
