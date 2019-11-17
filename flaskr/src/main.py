@@ -6,6 +6,10 @@ from configurations.environmentConfigurations import LocalEnvironment, ProdEnvir
 app = Flask(__name__)
 model = loadKerasModel('fruitModel')
 
+@app.route('/', methods=['GET'])
+def healthResponse():
+    return "I am alive", 200
+
 @app.route('/', methods=['POST'])
 def getResult():
     if 'file' not in request.files:
@@ -13,7 +17,7 @@ def getResult():
     f = request.files['file']
     result = checkImageFile(model, f)
     print(result)
-    return result
+    return result, 200
 
 if os.environ['ENV'] == 'prod':
     config = ProdEnvironment()
